@@ -31,7 +31,13 @@ class UserRegistration(flask_restful.Resource):
 class UserLogin(flask_restful.Resource):
     def post(self):
         data = parser.parse_args()
-        return data 
+        user = UserModel.UserModel.find_by_email(data['email'])
+        if None == user:
+            return {'message': ('user %s does not exist' % data['email'])}, 500
+        if data['password'] == user['password']:
+            return {'message': ('logged in as %s.' % user['email'])}
+        else:
+            return {'message': 'wrong credential'}, 500
       
 class UserLogoutAccess(flask_restful.Resource):
     def post(self):
