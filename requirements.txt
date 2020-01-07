@@ -1,1 +1,17 @@
+# connectivity
+opcua
+paho-mqtt
+
+# security
+passlib
+pyopenssl
+
+# storage
+pymongo
+
+# web base
 flask
+flask-restful 
+flask-jwt-extended
+
+

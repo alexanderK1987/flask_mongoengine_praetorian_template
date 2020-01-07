@@ -1,15 +1,21 @@
 # -*- coding: UTF-8 -*-
-from flask import Flask, Response
 import datetime
+import flask
+import flask_restful
 import json
 import time
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
+api = flask_restful.Api(app)
 
-@app.route('/hello')
-def main():
-    resp_json = {'utctime': datetime.datetime.utcfromtimestamp(time.time()).isoformat(), 'message': 'hello'}
-    return Response(json.dumps(resp_json), mimetype='application/json')
+import views.views as views
+import models.models as models
+import resources.resources as resources 
 
-if __name__ == '__main__':
-    app.run()
+api.add_resource(resources.UserRegistration, '/registration')
+api.add_resource(resources.UserLogin, '/login')
+api.add_resource(resources.UserLogoutAccess, '/logout/access')
+api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
+api.add_resource(resources.TokenRefresh, '/token/refresh')
+api.add_resource(resources.AllUsers, '/users')
+api.add_resource(resources.SecretResource, '/secret')
