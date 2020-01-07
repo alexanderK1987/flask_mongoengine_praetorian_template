@@ -7,7 +7,7 @@ passlib
 pyopenssl
 
 # storage
-pymongo
+Flask-PyMongo
 
 # web base
 flask
