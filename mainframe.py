@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 import datetime
 import flask
 import flask_restful
@@ -21,5 +20,7 @@ api.add_resource(resources.User.UserLogin, '/login')
 api.add_resource(resources.User.UserLogoutAccess, '/logout/access')
 api.add_resource(resources.User.UserLogoutRefresh, '/logout/refresh')
 api.add_resource(resources.User.TokenRefresh, '/token/refresh')
-api.add_resource(resources.User.AllUsers, '/users')
+api.add_resource(resources.User.User, '/user/<user_id>')
+api.add_resource(resources.User.Users, '/users')
 api.add_resource(resources.User.SecretResource, '/secret')
+

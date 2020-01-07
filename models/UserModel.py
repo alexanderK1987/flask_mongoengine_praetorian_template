@@ -12,5 +12,10 @@ class UserModel:
         return inserted_id
 
     @classmethod
+    def find_by_id(cls, user_id):
+        _id = bson.ObjectId(user_id)
+        return db.users.find_one_or_404({'_id': _id})
+
+    @classmethod
     def find_by_email(cls, email):
-        return db.users.find_one({'email': email})
+        return db.users.find_one_or_404({'email': email})

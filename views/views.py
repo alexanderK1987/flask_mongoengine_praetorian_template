@@ -3,7 +3,7 @@ import datetime
 import flask 
 import json 
 import time 
-
+# view only gives few info on RESTful services
 @app.route('/')
 @app.route('/hello')
 def main():
