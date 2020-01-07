@@ -20,8 +20,7 @@ class UserRegistration(flask_restful.Resource):
         try:
             if UserModel.UserModel.find_by_email(new_user.email) == None:
                 _id = new_user.insert_to_db().inserted_id
-                created = json_util.dumps({'_id': _id})
-                return json.loads(created)
+                return json.loads(json_util.dumps({'_id': _id}))
             else:
                 return {'message': ('user %s already existed' % new_user.email)}, 500 
 
@@ -50,16 +49,12 @@ class TokenRefresh(flask_restful.Resource):
     def post(self):
         return {'message': 'Token refresh'}
       
-class Users(flask_restful.Resource):
-    def get(self):
-        return {'message': 'List of users'}
-
-    def delete(self):
-        return {'message': 'Delete all users'}
-      
 class User(flask_restful.Resource):
-    def get(self, user_id):
-        return json.loads(json_util.dumps(UserModel.UserModel.find_by_id(user_id)))
+    def get(self, user_id=None):
+        if None == user_id:
+            return json.loads(json_util.dumps(UserModel.UserModel.find_all()))
+        else:
+            return json.loads(json_util.dumps(UserModel.UserModel.find_by_id(user_id)))
 
 class SecretResource(flask_restful.Resource):
     def get(self):
