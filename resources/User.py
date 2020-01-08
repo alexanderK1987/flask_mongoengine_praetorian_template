@@ -8,6 +8,7 @@ import json
 import models.Users.User_Model
 import models.Users.User_Schema
 from passlib.hash import pbkdf2_sha256 as SHA256
+from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 
 class UserRegistration(flask_restful.Resource):
     def post(self):
