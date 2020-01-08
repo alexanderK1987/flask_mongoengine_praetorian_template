@@ -1,7 +1,7 @@
-from mainframe import db
-from marshmallow_mongoengine import ModelSchema
-import models.Users.User_Model as User_Model
+
+import marshmallow_mongoengine
+import models.Users.User_Model 
 # schema
-class User_Schema(ModelSchema):
+class User_Schema(marshmallow_mongoengine.ModelSchema):
     class Meta:
-        model = User_Model.User_Model
+        model = models.Users.User_Model.User_Model

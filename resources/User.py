@@ -1,8 +1,6 @@
 import bson
 import flask
-import flask_restful
-import flask_restful.reqparse
-from flask_restful import request
+import flask_restful 
 import datetime
 import json 
 
@@ -11,12 +9,14 @@ import models.Users.User_Model
 import models.Users.User_Schema
 class UserRegistration(flask_restful.Resource):
     def post(self):
-        data = request.json
-        # MARSHMALLOW HAS PROBLEM CONVERTING DATETIME
-        data['origin'] = str(datetime.datetime.now())
         schema = models.Users.User_Schema.User_Schema()
-        new_user = schema.load(data).data
         try:
+            data = flask.request.json
+            new_user = schema.load(data).data
+            new_user.origin = datetime.datetime.now()
+            new_user.email = new_user.email.lower()
+
+            # check whether email is already used
             if not models.Users.User_Model.User_Model.objects(email=new_user.email):
                 new_user.save()
                 return {'_id': str(new_user.auto_id_0)}
@@ -28,12 +28,32 @@ class UserRegistration(flask_restful.Resource):
 
 class UserLogin(flask_restful.Resource):
     def post(self):
-        data = request.json
-        user = User_Model.objects(email=data['email'])
-        if data['password'] == user.password:
-            return {'message': ('logged in as %s.' % user['email'])}
-        else:
-            return {'message': 'wrong credential'}, 500
+        schema = models.Users.User_Schema.User_Schema()
+        try:
+            data = flask.request.json
+            input_user = schema.load(data).data
+            input_user.email = input_user.email.lower()
+            # user does not exist
+            if not models.Users.User_Model.User_Model.objects(email=input_user.email):
+                return {'message': ('user %s does not exist' % input_user.email)}, 404
+
+            existing_user = models.Users.User_Model.User_Model.objects.get(email=input_user.email)
+           
+            # wrong password
+            if input_user.password != existing_user.password:
+                return {'message': 'wrong credential'}, 403
+            # log in successful
+            else:
+                __last_login = existing_user.last_login
+                existing_user.last_login = datetime.datetime.now()
+                existing_user.save()
+                response_json = {'message': ('logged in as %s' % existing_user.email),
+                                 'active': existing_user.active,
+                                 'last_login': str(__last_login)}
+                return response_json
+
+        except Exception as e:
+            return {'message': 'Something went wrong', 'detail': str(e)}, 500 
       
 class UserLogoutAccess(flask_restful.Resource):
     def post(self):
