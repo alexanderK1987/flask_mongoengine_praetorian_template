@@ -7,6 +7,8 @@ import json
 #from models import User_Model, User_Schema
 import models.Users.User_Model
 import models.Users.User_Schema
+from passlib.hash import pbkdf2_sha256 as SHA256
+
 class UserRegistration(flask_restful.Resource):
     def post(self):
         schema = models.Users.User_Schema.User_Schema()
@@ -15,6 +17,8 @@ class UserRegistration(flask_restful.Resource):
             new_user = schema.load(data).data
             new_user.origin = datetime.datetime.now()
             new_user.email = new_user.email.lower()
+            print (new_user.password)
+            new_user.password = SHA256.hash(new_user.password)
 
             # check whether email is already used
             if not models.Users.User_Model.User_Model.objects(email=new_user.email):
@@ -38,9 +42,8 @@ class UserLogin(flask_restful.Resource):
                 return {'message': ('user %s does not exist' % input_user.email)}, 404
 
             existing_user = models.Users.User_Model.User_Model.objects.get(email=input_user.email)
-           
             # wrong password
-            if input_user.password != existing_user.password:
+            if not SHA256.verify(input_user.password, existing_user.password):
                 return {'message': 'wrong credential'}, 403
             # log in successful
             else:
@@ -74,9 +77,20 @@ class User(flask_restful.Resource):
             schema = models.Users.User_Schema.User_Schema(many=True)
             return schema.dump(results) 
         else:
+            if not models.Users.User_Model.User_Model.objects(_id=bson.ObjectId(user_id)):
+                return {'message': 'user does not exists'}, 404
             result = models.Users.User_Model.User_Model.objects.get(_id=bson.ObjectId(user_id))
             schema = models.Users.User_Schema.User_Schema()
             return schema.dump(result) 
+
+    def delete(self, user_id):
+        try:
+            if not models.Users.User_Model.User_Model.objects(_id=bson.ObjectId(user_id)):
+                return {'message': 'user does not exists'}, 404
+            models.Users.User_Model.User_Model.objects(_id=bson.ObjectId(user_id)).delete()
+            return '', 204
+        except Exception as e:
+            return {'message': 'Something went wrong', 'detail': str(e)}, 500 
 
 class SecretResource(flask_restful.Resource):
     def get(self):
