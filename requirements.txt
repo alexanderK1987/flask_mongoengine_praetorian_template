@@ -8,10 +8,16 @@ pyopenssl
 
 # storage
 Flask-PyMongo
+flask-mongoengine
+marshmallow-mongoengine
+marshmallow==2.15.4
 
 # web base
 flask
 flask-restful 
 flask-jwt-extended
+
+# utility
+python-dateutil>=2.7.0
 
 

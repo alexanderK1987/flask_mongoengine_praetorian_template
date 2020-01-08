@@ -3,17 +3,20 @@ import flask
 import flask_restful
 import json
 import time
-from flask_pymongo import PyMongo
+#from flask_pymongo import PyMongo
+from flask_mongoengine import MongoEngine
 
 app = flask.Flask(__name__)
-app.config['MONGO_URI'] = 'mongodb://memphis_admin:memphis@127.0.0.1:27017/memphis'
-mongo = PyMongo(app)
+app.config.from_pyfile('app.config')
+#app.config['MONGO_URI'] = 'mongodb://memphis_admin:memphis@127.0.0.1:27017/memphis'
+db = MongoEngine(app)
+
+#mongo = PyMongo(app)
 api = flask_restful.Api(app)
 
 import views.views 
-import models.UserModel
+#import models.UserModel
 import resources.User
-
 
 api.add_resource(resources.User.UserRegistration, '/registration')
 api.add_resource(resources.User.UserLogin, '/login')
