@@ -11,7 +11,7 @@ from models.Users.User_Schema import User_Schema
 def user_registration():
     schema = User_Schema()
     try:
-        data = flask.request.json
+        data = flask.request.get_json(force=True)
         new_user = schema.load(data).data
         new_user.origin = datetime.datetime.now()
         new_user.email = new_user.email.lower().strip()
@@ -31,7 +31,7 @@ def user_registration():
 def user_login():
     schema = User_Schema()
     try:
-        data = flask.request.json
+        data = flask.request.get_json(force=True)
         input_user = schema.load(data).data
         input_user.email = input_user.email.lower().strip()
         # user does not exist
