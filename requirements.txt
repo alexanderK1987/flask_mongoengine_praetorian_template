@@ -3,18 +3,16 @@ opcua
 paho-mqtt
 
 # security
-passlib
 pyopenssl
+flask-praetorian
 
 # storage
-Flask-PyMongo
 flask-mongoengine
 marshmallow-mongoengine
 marshmallow==2.15.4
 
 # web base
 flask
-flask-restful 
 flask-jwt-extended
 
 # utility
