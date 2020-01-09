@@ -68,9 +68,7 @@ def token_refresh():
 
 @mainframe.app.route('/user', methods=['GET'])
 def users():
-    results = User_Model.get_all()
-    schema = User_Schema(many=True)
-    return flask.jsonify(schema.dump(results).data)
+    return flask.jsonify(User_Schema(many=True).dump(User_Model.get_all()).data)
 
 @mainframe.app.route('/user/<user_id>', methods=['GET', 'DELETE'])
 def user(user_id):
@@ -78,9 +76,7 @@ def user(user_id):
         return {'msg': 'user does not exists'}, 404
     try:
         if flask.request.method == 'GET':
-            result = User_Model.get_by_id(bson.ObjectId(user_id))
-            schema = User_Schema()
-            return schema.dump(result) 
+            return User_Schema().dump(User_Model.get_by_id(bson.ObjectId(user_id))) 
         
         elif flask.request.method == 'DELETE':
             User_Model.delete_by_id(user_id)
