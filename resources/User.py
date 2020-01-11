@@ -2,6 +2,8 @@ import bson
 import datetime
 import flask
 import flask_praetorian
+import sys
+import traceback
 
 import mainframe 
 from models.Users.User_Model import User_Model
@@ -16,16 +18,36 @@ def user_registration():
         new_user.origin = datetime.datetime.now()
         new_user.email = new_user.email.lower().strip()
         new_user.password = mainframe.guard.hash_password(new_user.password)
+
+        # explicitly fill the roles and active status for security purpose
+        new_user.role = ['guest']
+        new_user.active = False
+
         # check whether email is already used
-        if not User_Model.email_exists(new_user.email):
+        if User_Model.email_exists(new_user.email):
+            return {'msg': ('user %s already existed' % new_user.email)}, 400 
+        else:
             new_user.save()
             str_id = str(new_user.auto_id_0)
-            return {'_id': str_id} 
-        else:
-            return {'msg': ('user %s already existed' % new_user.email)}, 400 
+            new_user._id = bson.ObjectId(str_id)
+            # for flask-praetorian
+            mainframe.guard.send_registration_email(new_user.email, user=new_user, subject='MEMPHIS System Registration')
+            return {'_id': str_id, 
+                    'msg': 'registration mail sent to %s' % (new_user.email)} 
 
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
+
+@mainframe.app.route('/registration/confirm')
+def user_confirm():
+    token = flask.request.args.get('token')
+    data = mainframe.guard.extract_jwt_token(token, access_type=flask_praetorian.constants.AccessType.register)
+    print (data)
+    user = mainframe.guard.get_user_from_registration_token(token)
+    user.active = True
+    user.save()
+    return {'msg': 'user %s registered' % (user.email) ,
+            'access_token': mainframe.guard.encode_jwt_token(user)}
 
 @mainframe.app.route('/login', methods=['POST'])
 def user_login():

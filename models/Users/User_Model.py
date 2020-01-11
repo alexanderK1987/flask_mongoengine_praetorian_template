@@ -29,7 +29,7 @@ class User_Model(db.Document):
     @classmethod
     def identify(cls, in_id):
         if cls.id_exists(in_id):
-            return self.get_by_id(in_id)
+            return cls.get_by_id(in_id)
         return None
 
     # used by praetorian
