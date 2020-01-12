@@ -3,6 +3,7 @@ import datetime
 import flask
 import flask_praetorian
 import sys
+import time
 import traceback
 
 import mainframe 
@@ -29,14 +30,23 @@ def user_registration():
         else:
             new_user.save()
             str_id = str(new_user.auto_id_0)
+            # for flask-praetorian, must send a user instance with a valid _id field
             new_user._id = bson.ObjectId(str_id)
-            # for flask-praetorian
-            mainframe.guard.send_registration_email(new_user.email, user=new_user, subject='MEMPHIS System Registration')
+            mainframe.guard.send_registration_email(new_user.email, user=new_user)
             return {'_id': str_id, 
                     'msg': 'registration mail sent to %s' % (new_user.email)} 
 
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
+
+@mainframe.app.route('/registration/resend/<user_id>', methods=['POST'])
+def user_resend_registration_email(user_id):
+    if not User_Model.id_exists(user_id):
+        return {'msg': 'user not found, please register first'}, 404
+    else:
+        user = User_Mode.get_by_id(user_id)
+        mainframe.guard.send_registration_email(user.email, user=user)
+        return {'msg': 'registration mail sent to %s' % (user.email)}
 
 @mainframe.app.route('/registration/confirm')
 def user_confirm():
@@ -98,7 +108,7 @@ def user(user_id):
         return {'msg': 'user does not exists'}, 404
     try:
         if flask.request.method == 'GET':
-            return User_Schema().dump(User_Model.get_by_id(bson.ObjectId(user_id))) 
+            return User_Schema().dump(User_Model.get_by_id(user_id)) 
         
         elif flask.request.method == 'DELETE':
             User_Model.delete_by_id(user_id)
