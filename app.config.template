@@ -24,13 +24,13 @@ mail_settings = {
 
 super_user_profile = {
     "email": "admin@memphis.gov",
-    "password": "",
+    "password": "<string:YOUR_SUPER_USER_PASSWORD>",
     "roles": ["admin"],
     "active": True,
 }
 
 app.config["SUPER_USER_PROFILE"] = super_user_profile
-app.config["PRAETORIAN_CONFIRMATION_URI"] = "https://127.0.0.1:5000/registration/confirm"
+app.config["PRAETORIAN_CONFIRMATION_URI"] = "<string:YOUR_HOST_ADDRESS>:<int_YOUR_HOST_PORT>/registration/confirm"
 app.config["PRAETORIAN_CONFIRMATION_SUBJECT"] = "MEMPHIS Confirmation E-mail of Registration"
 app.config["PRAETORIAN_CONFIRMATION_SENDER"] = mail_settings["MAIL_USERNAME"]
 app.config.update(mail_settings)
