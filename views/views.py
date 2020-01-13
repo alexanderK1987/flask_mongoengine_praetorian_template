@@ -7,7 +7,7 @@ import time
 
 @app.route('/', methods=['GET'])
 def hello():
-    resp_json = {'utctime': datetime.datetime.utcfromtimestamp(time.time()).isoformat(), 'message': 'hello'}
+    resp_json = {'utctime': datetime.datetime.utcfromtimestamp(time.time()).isoformat(), 'msg': 'hello'}
     return flask.Response(json.dumps(resp_json), mimetype='application/json')
 
 
