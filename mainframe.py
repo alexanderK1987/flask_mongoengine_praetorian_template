@@ -20,5 +20,6 @@ mail = flask_mail.Mail(app)
 import views.views 
 import resources.User
 import resources.AdminFunction
+import resources.Sitemap
 import init_finalize 
 

@@ -6,9 +6,9 @@ from mainframe import app
 app.config["MONGODB_SETTINGS"] = {
     "db": "memphis",
     "username": "memphis_admin",
-    "password": "memphis"
+    "password": "memphis",
     "host":     "<string:YOUR_MONGODB_HOST>",
-    "port":      <int:YOUR_MONGODB_PORT>,
+    "port":      <int:YOUR_MONGODB_PORT>
 }
 
 app.config["SECRET_KEY"] = "top secret"
