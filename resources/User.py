@@ -52,9 +52,9 @@ def user_resend_registration_email():
         # user already active
         if user.active:
             return {'msg': 'user %s is active already' % (user.email)} , 403
-        else:
-            mainframe.guard.send_registration_email(user.email, user=user)
-            return {'msg': 'registration mail sent to %s' % (user.email)}
+        
+        mainframe.guard.send_registration_email(user.email, user=user)
+        return {'msg': 'registration mail sent to %s' % (user.email)}
 
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
@@ -63,6 +63,10 @@ def user_resend_registration_email():
 def user_confirm():
     token = flask.request.args.get('token')
     user = mainframe.guard.get_user_from_registration_token(token)
+    # user already active
+    if user.active:
+        return {'msg': 'user %s is active already' % (user.email)} , 403
+        
     user.active = True
     user.save()
     return {'msg': 'user %s registered' % (user.email) ,
