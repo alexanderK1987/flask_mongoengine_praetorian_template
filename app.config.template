@@ -1,10 +1,11 @@
 from mainframe import app
+# mongodb setting based on mongoinit.js
 app.config["MONGODB_SETTINGS"] = {
-	"db": "memphis",
-	"host": "127.0.0.1",
-	"port": 27017,
-	"username": "memphis_admin",
-	"password": ""
+    "db": "memphis",
+    "username": "memphis_admin",
+    "password": "memphis"
+    "host":     "<string:YOUR_MONGODB_HOST>",
+    "port":      <int:YOUR_MONGODB_PORT>,
 }
 
 app.config["SECRET_KEY"] = "top secret"
@@ -13,12 +14,12 @@ app.config["JWT_REFRESH_LIFESPAN"] = {"days": 30}
 app.config["PROPAGATE_EXCEPTIONS"] = True
 
 mail_settings = {
-    "MAIL_SERVER": "smtp.gmail.com",
-    "MAIL_PORT": 465,
-    "MAIL_USE_TLS": False,
-    "MAIL_USE_SSL": True,
-    "MAIL_USERNAME": "",
-    "MAIL_PASSWORD": ""
+    "MAIL_SERVER":   "<string:YOUR_MAIL_HOST>",
+    "MAIL_PORT":      <int:YOUR_MAIL_PORT>,
+    "MAIL_USE_TLS":   <bool>,
+    "MAIL_USE_SSL":   <bool>,
+    "MAIL_USERNAME": "<string:YOUR_MAIL_ADDRESS>",
+    "MAIL_PASSWORD": "<string:YOUR_MAIL_PASSWORD>"
 }
 
 super_user_profile = {
