@@ -28,7 +28,7 @@ mail_settings = {
 super_user_profile = {
     "email": "admin@memphis.gov",
     "password": "<string:YOUR_SUPER_USER_PASSWORD>",
-    "roles": ["admin"],
+    "roles": ["root", "admin"],
     "active": True,
 }
 
