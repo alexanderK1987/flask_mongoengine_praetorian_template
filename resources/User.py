@@ -2,13 +2,12 @@ import bson
 import datetime
 import flask
 import flask_praetorian
-import sys
-import time
-import traceback
 
 import mainframe 
 from models.Users.User_Model import User_Model
 from models.Users.User_Schema import User_Schema
+from models.Users.Revoked_Token_Model import Revoked_Token_Model
+from models.Users.Revoked_Token_Schema import Revoked_Token_Schema
 
 @mainframe.app.route('/registration', methods=['POST'])
 def user_registration():
@@ -69,8 +68,9 @@ def user_confirm():
         
     user.active = True
     user.save()
-    return {'msg': 'user %s registered' % (user.email) ,
-            'access_token': mainframe.guard.encode_jwt_token(user)}
+    return {
+        'msg': 'user %s registered' % (user.email) ,
+        'access_token': mainframe.guard.encode_jwt_token(user)}
 
 @mainframe.app.route('/login', methods=['POST'])
 def user_login():
@@ -95,49 +95,58 @@ def user_login():
         existing_user.last_login = datetime.datetime.now()
         existing_user.save()
         str_id = str(existing_user._id)
-        return {'msg': ('logged in as %s' % existing_user.email),
-                'active': existing_user.active,
-                'last_login': str(__last_login),
-                'access_token': mainframe.guard.encode_jwt_token(existing_user)}
+        return {
+            'msg': 'logged in as %s' % (existing_user.email),
+            'active': existing_user.active,
+            'last_login': str(__last_login),
+            'access_token': mainframe.guard.encode_jwt_token(existing_user)}
 
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
-@mainframe.app.route('/logout/access', methods=['POST'])      
-def user_logout_access():
-    return {'msg': 'User logout'}
+@mainframe.app.route('/logout', methods=['POST'])      
+@flask_praetorian.auth_required
+def user_logout():
+    try:
+        user = flask_praetorian.current_user()
+        header_token = mainframe.guard.read_token_from_header()
+        header_jti = mainframe.guard.extract_jwt_token(header_token)['jti']
 
-@mainframe.app.route('/logout/refresh', methods=['POST'])      
-def user_logout_refresh():
-    return {'msg': 'User logout'}
+        disable_token = Revoked_Token_Schema().load({'jti': header_jti}).data
+        disable_token.save()
+        return {'msg': 'user %s logout' % (user.email)}
+    except Exception as e:
+        return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
-@mainframe.app.route('/token/refresh', methods=['POST'])
-def token_refresh():
-    return {'msg': 'Token refresh'}
+@mainframe.app.route('/whoami', methods=['GET'])
+@flask_praetorian.auth_required
+def who_am_i():
+    try:
+        return User_Schema().dump(flask_praetorian.current_user())
+    except Exception as e:
+        return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
+
+@mainframe.app.route('/refresh_token', methods=['GET'])
+def refresh():
+    try:
+        old_token = mainframe.guard.read_token_from_header()
+        new_token = mainframe.guard.refresh_jwt_token(old_token)
+        return {'token': new_token}
+    except Exception as e:
+        return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
 @mainframe.app.route('/user', methods=['GET'])
-def users():
+@flask_praetorian.auth_required
+def get_users():
     return flask.jsonify(User_Schema(many=True).dump(User_Model.get_all()).data)
 
-@mainframe.app.route('/user/<user_id>', methods=['GET', 'DELETE'])
-def user(user_id):
+@mainframe.app.route('/user/<user_id>', methods=['GET'])
+@flask_praetorian.auth_required
+def get_user(user_id):
     if not User_Model.id_exists(bson.ObjectId(user_id)):
         return {'msg': 'user does not exists'}, 404
     try:
-        if flask.request.method == 'GET':
-            return User_Schema().dump(User_Model.get_by_id(user_id)) 
-        
-        elif flask.request.method == 'DELETE':
-            User_Model.delete_by_id(user_id)
-            return '', 204
-
+        return User_Schema().dump(User_Model.get_by_id(user_id)) 
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
-
-@mainframe.app.route('/secret', methods=['GET'])
-@flask_praetorian.roles_accepted('admin')
-def secret():
-    return {'answer': 42}
-
-mainframe.guard.init_app(mainframe.app, User_Model)
 

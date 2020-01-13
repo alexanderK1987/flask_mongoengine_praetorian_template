@@ -1,5 +1,8 @@
-from mainframe import db
+import mainframe
 import bson
+
+db = mainframe.db
+
 class User_Model(db.Document):
     # specify mongodb collection
     meta = {'collection': 'users'}
@@ -43,6 +46,10 @@ class User_Model(db.Document):
     @property
     def identity(self):
         return str(self._id)
+
+    # used by praetorian
+    def is_valid(self):
+        return self.active
 
     @classmethod
     def get_by_id(cls, in_id):
