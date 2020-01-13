@@ -1,3 +1,6 @@
+# please rename this file 'app.config' 
+# change the necessary fields based on your setting
+
 from mainframe import app
 # mongodb setting based on mongoinit.js
 app.config["MONGODB_SETTINGS"] = {
