@@ -10,7 +10,7 @@ class User_Model(db.Document):
     origin     = db.DateTimeField(default=None)
     active     = db.BooleanField(default=False)
     last_login = db.DateTimeField(default=None)
-    roles      = db.ListField(db.StringField(), default=[])
+    roles      = db.ListField(db.StringField())
 
     # used by praetorian
     @property
@@ -71,7 +71,4 @@ class User_Model(db.Document):
         if type(in_id) is str:
             in_id = bson.ObjectId(in_id)
         return cls.objects(_id=in_id)
-
-    def is_active(self):
-        return self.active
 

@@ -14,4 +14,5 @@ mail = flask_mail.Mail(app)
 
 import views.views 
 import resources.User
+import load_admin 
 

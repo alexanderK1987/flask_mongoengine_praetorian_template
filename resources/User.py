@@ -21,7 +21,7 @@ def user_registration():
         new_user.password = mainframe.guard.hash_password(new_user.password)
 
         # explicitly fill the roles and active status for security purpose
-        new_user.role = ['guest']
+        new_user.roles = ['guest']
         new_user.active = False
 
         # check whether email is already used
@@ -39,20 +39,29 @@ def user_registration():
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
-@mainframe.app.route('/registration/resend/<user_id>', methods=['POST'])
-def user_resend_registration_email(user_id):
-    if not User_Model.id_exists(user_id):
-        return {'msg': 'user not found, please register first'}, 404
-    else:
-        user = User_Mode.get_by_id(user_id)
-        mainframe.guard.send_registration_email(user.email, user=user)
-        return {'msg': 'registration mail sent to %s' % (user.email)}
+@mainframe.app.route('/registration/resend', methods=['POST'])
+def user_resend_registration_email():
+    try:
+        data = flask.request.get_json(force=True)
+        in_email = data['email'].lower().strip()
+        # user does not exist
+        if not User_Model.email_exists(in_email):
+            return {'msg': 'user %s not found, please register first' % (in_email)}, 404
+
+        user = User_Mode.get_by_email(in_email)
+        # user already active
+        if user.active:
+            return {'msg': 'user %s is active already' % (user.email)} , 403
+        else:
+            mainframe.guard.send_registration_email(user.email, user=user)
+            return {'msg': 'registration mail sent to %s' % (user.email)}
+
+    except Exception as e:
+        return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
 @mainframe.app.route('/registration/confirm')
 def user_confirm():
     token = flask.request.args.get('token')
-    data = mainframe.guard.extract_jwt_token(token, access_type=flask_praetorian.constants.AccessType.register)
-    print (data)
     user = mainframe.guard.get_user_from_registration_token(token)
     user.active = True
     user.save()
@@ -68,10 +77,14 @@ def user_login():
         input_user.email = input_user.email.lower().strip()
         # user does not exist
         if not User_Model.email_exists(input_user.email):
-            return {'msg': ('user %s does not exist' % input_user.email)}, 404
+            return {'msg': 'user %s does not exist' % (input_user.email)}, 404
 
         # praetorian will raise exception and handle wrong credential automatically
         existing_user = mainframe.guard.authenticate(input_user.email, input_user.password)
+
+        # user has not confirm with email
+        if not existing_user.active:
+            return {'msg': 'user %s has not confirmed by email' % (input_user.email)}, 403
 
         # log in successful
         __last_login = existing_user.last_login
