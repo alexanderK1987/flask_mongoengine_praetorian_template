@@ -31,6 +31,7 @@ Run the commands to start the service:
 
 ### Installation for virtual enviroment
     sudo pip3 install virtualenv
+    bash certs/keygen.sh
     make install
     cp add.config.template app.config
     # EDIT app.config
