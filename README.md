@@ -16,19 +16,28 @@ This is a RESTful service template based on Python3, flask, flask-praetorian, fl
 This template requires Python3 development environments. Virtual environment is recommended but not required.
 
 ### Installation for native environment
-Run the command directly:
+Run the commands directly to install requirements:
 
     sudo pip3 install --upgrade pip; sudo pip3 install -r requirements.txt
     bash certs/keygen.sh
     cp add.config.template app.config
     # EDIT app.config
+    mongo < mongoinit.js
+    
+Run the commands to start the service:
+
     export FLASK_APP=mainframe.py; flask run --certs=./certs/cert.pem --key=./certs/key.pem
+    
 
 ### Installation for virtual enviroment
     sudo pip3 install virtualenv
     make install
     cp add.config.template app.config
     # EDIT app.config
+    mongo < mongoinit.js
+
+Run the commands to start the service:
+
     make run
 
 ## Reference
