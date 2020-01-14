@@ -4,9 +4,9 @@
 from mainframe import app
 # mongodb setting based on mongoinit.js
 app.config["MONGODB_SETTINGS"] = {
-    "db": "memphis",
-    "username": "memphis_admin",
-    "password": "memphis",
+    "db": "<YOUR_APP_NAME>",
+    "username": "<YOUR_APP_NAME>_admin",
+    "password": "<YOUR_APP_NAME>",
     "host":     "<string:YOUR_MONGODB_HOST>",
     "port":      <int:YOUR_MONGODB_PORT>
 }
@@ -26,7 +26,7 @@ mail_settings = {
 }
 
 super_user_profile = {
-    "email": "admin@memphis.gov",
+    "email": "admin@<YOUR_APP_NAME>.gov",
     "password": "<string:YOUR_SUPER_USER_PASSWORD>",
     "roles": ["root", "admin"],
     "active": True,

@@ -1,6 +1,6 @@
 db=db.getSiblingDB('admin')
-db=db.getSiblingDB('memphis')
-db.createUser({ user: "memphis_admin", pwd: "memphis", roles: [{role: "readWrite", db: "memphis" }]});
+db=db.getSiblingDB('<YOUR_APP_NAME>')
+db.createUser({ user: "<YOUR_APP_NAME>_admin", pwd: "<YOUR_APP_NAME>", roles: [{role: "readWrite", db: "<YOUR_APP_NAME>" }]});
 
 db.createCollection('users');
 db.createCOllection('revoked_tokens');

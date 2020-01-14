@@ -15,13 +15,29 @@ This is a RESTful service template based on Python3, flask, flask-praetorian, fl
 ## Base Package Requirement
 This template requires Python3 development environments. Virtual environment is recommended but not required.
 
+
+### Edit Configuration Files
+Copy `app.config.template` to `app.config`
+
+    cp app.config.template app.config
+
+Modify the files to match your app profile
+
+- app.config
+- mongoinit.js
+
+### Generate Keys and Certificates for SSL Access
+Run the following commands to generate the necessary key files (`certs\key.pem`, `certs\cert.pem`:
+
+    cd certs
+    bash keygen.sh
+    cd ..
+
 ### Installation for native environment
 Run the commands directly to install requirements:
 
-    sudo pip3 install --upgrade pip; sudo pip3 install -r requirements.txt
-    bash certs/keygen.sh
-    cp add.config.template app.config
-    # EDIT app.config
+    sudo pip3 install --upgrade pip
+    sudo pip3 install -r requirements.txt
     mongo < mongoinit.js
     
 Run the commands to start the service:
@@ -30,11 +46,10 @@ Run the commands to start the service:
     
 
 ### Installation for virtual enviroment
+Run the commands directly to install requirements:
+
     sudo pip3 install virtualenv
-    bash certs/keygen.sh
     make install
-    cp add.config.template app.config
-    # EDIT app.config
     mongo < mongoinit.js
 
 Run the commands to start the service:
