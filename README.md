@@ -20,11 +20,15 @@ Run the command directly:
 
     sudo pip3 install --upgrade pip; sudo pip3 install -r requirements.txt
     bash certs/keygen.sh
+    cp add.config.template app.config
+    # EDIT app.config
     export FLASK_APP=mainframe.py; flask run --certs=./certs/cert.pem --key=./certs/key.pem
 
 ### Installation for virtual enviroment
     sudo pip3 install virtualenv
     make install
+    cp add.config.template app.config
+    # EDIT app.config
     make run
 
 ## Reference
