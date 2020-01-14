@@ -33,12 +33,12 @@ Run the command directly:
 
 ## Reference
  - **structural design**
-   - [codeburst: JWT authorization in Flask](http://https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb "codeburst: JWT authorization in Flask")
+   - [codeburst: JWT authorization in Flask](https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb "codeburst: JWT authorization in Flask")
 
  - **flask-praetorian**
    - [readthedocs: flask-praetorian](https://flask-praetorian.readthedocs.io/en/latest/ "readthedocs: flask-praetorian")
-   - [github: flask-praetorian](http://https://github.com/dusktreader/flask-praetorian "github")
+   - [github: flask-praetorian](https://github.com/dusktreader/flask-praetorian "github")
   
  - **flask-marshmallow**
-   - [readthedocs: flask-marshmallow example](http://https://flask-marshmallow.readthedocs.io/en/latest/ "readthedocs: flask-marshmallow example")
+   - [readthedocs: flask-marshmallow example](https://flask-marshmallow.readthedocs.io/en/latest/ "readthedocs: flask-marshmallow example")
  
