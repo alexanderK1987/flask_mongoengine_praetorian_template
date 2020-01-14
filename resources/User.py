@@ -9,7 +9,7 @@ from models.Users.User_Schema import User_Schema
 from models.Users.Revoked_Token_Model import Revoked_Token_Model
 from models.Users.Revoked_Token_Schema import Revoked_Token_Schema
 
-@mainframe.app.route('/registration', methods=['POST'])
+@mainframe.app.route('/auth/register', methods=['POST'])
 def user_registration():
     schema = User_Schema()
     try:
@@ -38,7 +38,7 @@ def user_registration():
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
-@mainframe.app.route('/registration/resend', methods=['POST'])
+@mainframe.app.route('/auth/resend_email', methods=['POST'])
 def user_resend_registration_email():
     try:
         data = flask.request.get_json(force=True)
@@ -58,7 +58,7 @@ def user_resend_registration_email():
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
-@mainframe.app.route('/registration/confirm')
+@mainframe.app.route('/auth/email_confirm')
 def user_confirm():
     token = flask.request.args.get('token')
     user = mainframe.guard.get_user_from_registration_token(token)
@@ -72,7 +72,7 @@ def user_confirm():
         'msg': 'user %s registered' % (user.email) ,
         'access_token': mainframe.guard.encode_jwt_token(user)}
 
-@mainframe.app.route('/login', methods=['POST'])
+@mainframe.app.route('/auth/login', methods=['POST'])
 def user_login():
     schema = User_Schema()
     try:
@@ -104,7 +104,7 @@ def user_login():
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
-@mainframe.app.route('/logout', methods=['POST'])      
+@mainframe.app.route('/auth/logout', methods=['POST'])      
 @flask_praetorian.auth_required
 def user_logout():
     try:
@@ -118,15 +118,9 @@ def user_logout():
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
-@mainframe.app.route('/whoami', methods=['GET'])
-@flask_praetorian.auth_required
-def who_am_i():
-    try:
-        return User_Schema().dump(flask_praetorian.current_user())
-    except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
-@mainframe.app.route('/refresh_token', methods=['GET'])
+@mainframe.app.route('/auth/refresh_token', methods=['GET'])
 def refresh():
     try:
         old_token = mainframe.guard.read_token_from_header()
@@ -138,15 +132,24 @@ def refresh():
 @mainframe.app.route('/user', methods=['GET'])
 @flask_praetorian.auth_required
 def get_users():
-    return flask.jsonify(User_Schema(many=True).dump(User_Model.get_all()).data)
+    try:
+        return flask.jsonify(User_Schema(many=True).dump(User_Model.get_all()).data)
+    except Exception as e:
+        return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
 @mainframe.app.route('/user/<user_id>', methods=['GET'])
 @flask_praetorian.auth_required
 def get_user(user_id):
-    if not User_Model.id_exists(bson.ObjectId(user_id)):
-        return {'msg': 'user does not exists'}, 404
     try:
+        if not User_Model.id_exists(bson.ObjectId(user_id)):
+            return {'msg': 'user does not exists'}, 404
         return User_Schema().dump(User_Model.get_by_id(user_id)) 
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
+@mainframe.app.route('/whoami', methods=['GET'])
+@flask_praetorian.auth_required
+def who_am_i():
+    try:
+        return User_Schema().dump(flask_praetorian.current_user())
+    except Exception as e:
