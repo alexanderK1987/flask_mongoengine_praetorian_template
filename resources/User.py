@@ -47,7 +47,7 @@ def user_resend_registration_email():
         if not User_Model.email_exists(in_email):
             return {'msg': 'user %s not found, please register first' % (in_email)}, 404
 
-        user = User_Mode.get_by_email(in_email)
+        user = User_Model.get_by_email(in_email)
         # user already active
         if user.active:
             return {'msg': 'user %s is active already' % (user.email)} , 403
