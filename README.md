@@ -1,16 +1,16 @@
 ## Flask Praetorian JWT Template
 This is a RESTful service template based on Python3, flask, flask-praetorian, flask-mongoengine.
 - Provide basic authentication functions, including:
- - https service
- - user registration
- - email validation
- - login/logout
- - role-based permission handling
+  - https service
+  - user registration
+  - email validation
+  - login/logout
+  - role-based permission handling
  
 
 - Provide admin function, including:
- - user activation/deactivation
- - user deletion
+  - user activation/deactivation
+  - user deletion
 
 ## Base Package Requirement
 This template requires Python3 development environments. Virtual environment is recommended but not required.
@@ -29,12 +29,12 @@ Run the command directly:
 
 ## Reference
  - **structural design**
-  - [codeburst: JWT authorization in Flask](http://https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb "codeburst: JWT authorization in Flask")
+   - [codeburst: JWT authorization in Flask](http://https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb "codeburst: JWT authorization in Flask")
 
  - **flask-praetorian**
-  - [readthedocs: flask-praetorian](https://flask-praetorian.readthedocs.io/en/latest/ "readthedocs: flask-praetorian")
-  - [github: flask-praetorian](http://https://github.com/dusktreader/flask-praetorian "github")
+   - [readthedocs: flask-praetorian](https://flask-praetorian.readthedocs.io/en/latest/ "readthedocs: flask-praetorian")
+   - [github: flask-praetorian](http://https://github.com/dusktreader/flask-praetorian "github")
   
  - **flask-marshmallow**
-  - [readthedocs: flask-marshmallow example](http://https://flask-marshmallow.readthedocs.io/en/latest/ "readthedocs: flask-marshmallow example")
+   - [readthedocs: flask-marshmallow example](http://https://flask-marshmallow.readthedocs.io/en/latest/ "readthedocs: flask-marshmallow example")
  
