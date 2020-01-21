@@ -8,7 +8,7 @@ from models.Users.User_Schema import User_Schema
 from models.Users.Revoked_Token_Model import Revoked_Token_Model
 from models.Users.Revoked_Token_Schema import Revoked_Token_Schema
 
-@mainframe.app.route('/admin/delete_user/<user_id>', methods=['DELETE'])
+@mainframe.app.route('/auth/user/delete/<user_id>')
 @flask_praetorian.auth_required
 @flask_praetorian.roles_accepted('admin')
 def delete_user(user_id):
@@ -20,13 +20,7 @@ def delete_user(user_id):
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
 
-@mainframe.app.route('/admin/secret', methods=['GET'])
-@flask_praetorian.auth_required
-@flask_praetorian.roles_accepted('admin')
-def view_secret():
-    return {'secret': 299792458.0}
-
-@mainframe.app.route('/admin/revoke_token', methods=['POST'])
+@mainframe.app.route('/auth/token/revoke', methods=['POST'])
 @flask_praetorian.auth_required
 @flask_praetorian.roles_accepted('admin')
 def revoke_token():
@@ -42,7 +36,7 @@ def revoke_token():
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500
 
-@mainframe.app.route('/auth/disable_user/<user_id>')
+@mainframe.app.route('/auth/user/disable/<user_id>')
 @flask_praetorian.auth_required
 @flask_praetorian.roles_accepted('admin')
 def disable_user(user_id):
@@ -63,3 +57,11 @@ def disable_user(user_id):
         return {'msg': 'user %s deactivated' % (user.email)}, 200
     except Exception as e:
         return {'msg': 'Something went wrong', 'detail': str(e)}, 500
+
+
+@mainframe.app.route('/auth/secret', methods=['GET'])
+@flask_praetorian.auth_required
+@flask_praetorian.roles_accepted('admin')
+def view_secret():
+    return {'secret': 299792458.0}
+

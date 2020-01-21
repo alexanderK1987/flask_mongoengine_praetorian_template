@@ -1,6 +1,3 @@
-# connectivity
-opcua
-paho-mqtt
 
 # security
 pyopenssl
