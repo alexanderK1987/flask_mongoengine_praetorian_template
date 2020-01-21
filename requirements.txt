@@ -10,7 +10,6 @@ marshmallow==2.15.4
 
 # web base
 flask
-flask-jwt-extended
 
 # utility
 python-dateutil>=2.7.0
