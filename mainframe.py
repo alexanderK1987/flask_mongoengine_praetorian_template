@@ -17,7 +17,7 @@ guard.init_app(app, User_Model, is_blacklisted=Revoked_Token_Model.is_jti_revoke
 
 mail = flask_mail.Mail(app)
 
-import views.views 
+import resources.Hello 
 import resources.User
 import resources.AdminFunction
 import resources.Sitemap
