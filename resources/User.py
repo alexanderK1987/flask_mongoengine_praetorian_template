@@ -153,3 +153,4 @@ def who_am_i():
     try:
         return User_Schema().dump(flask_praetorian.current_user())
     except Exception as e:
+        return {'msg': 'Something went wrong', 'detail': str(e)}, 500 
